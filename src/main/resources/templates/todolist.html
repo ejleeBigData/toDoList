@@ -9,10 +9,9 @@
 <div class="container">
     <h1>To-Do List(In Memory)</h1>
     <form th:action="@{todos}" method="post">
-        <input type="text" name="task" placeholder="Enter a new task"/>
+        <input type="text" name="task" placeholder="Enter a new task" required/>
         <button type="submit">ADD</button>
     </form>
-
     <div class="todo-list">
         <ul>
             <li th:each="task: ${todos}">
@@ -21,11 +20,14 @@
                     <input type="checkbox" onclick="this.form.submit();" th:checked="${task.completed}"/>
                 </form>
 
-                <span th:text="${task.description}"></span>
+                <span th:text="${#strings.length(task.description) > 16 ? #strings.substring(task.description, 0, 15) + '...' : task.description}"
+                      th:title="${task.description}"
+                      th:classappend="${task.completed} ? 'completed' : ''"></span>
+
 
                 <form th:action="@{/todos/update}" method="post">
                     <input type="hidden" name="taskId" th:value="${task.id}"/>
-                    <input type="text" name="newDescription" placeholder="Edit Task" required/>
+                    <input type="text" name="newDescription" placeholder="Edit Task" required size="10"/>
                     <button type="submit">UPDATE</button>
                 </form>
 
